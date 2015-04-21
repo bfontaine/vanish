@@ -14,6 +14,8 @@ func File(fn func(string)) error {
 		return err
 	}
 
+	f.Close()
+
 	return callThenRemove(f.Name(), fn)
 }
 
@@ -46,6 +48,7 @@ func Env(fn func()) error {
 }
 
 func callThenRemove(name string, fn func(string)) error {
+	// Do we need RemoveAll for directories here?
 	defer os.Remove(name)
 
 	fn(name)
