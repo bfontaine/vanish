@@ -1,5 +1,53 @@
 package vanish
 
+import (
+	"os"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func fileExists(path string) bool {
+	// we don’t really check for errors here
+	_, err := os.Stat(path)
+	return err == nil
+}
+
+func TestFile(t *testing.T) {
+	var filename string
+
+	File(func(name string) {
+		filename = name
+		assert.True(t, fileExists(filename))
+	})
+
+	assert.False(t, fileExists(filename))
+}
+
+func TestDir(t *testing.T) {
+	var dirname string
+
+	Dir(func(name string) {
+		dirname = name
+		assert.True(t, fileExists(dirname))
+	})
+
+	assert.False(t, fileExists(dirname))
+}
+
+func TestEnv(t *testing.T) {
+	key := "VANISH_TEST_ENV_42XYZ"
+	val := "foob&ar+/xqye$@"
+	os.Setenv(key, val)
+
+	Env(func() {
+		assert.Equal(t, val, os.Getenv(key))
+		os.Setenv(key, "yolofoo")
+	})
+
+	assert.Equal(t, val, os.Getenv(key))
+}
+
 func ExampleFile() {
 	File(func(name string) {
 		// 'name' is the name of a temporary file that’ll be deleted at the end
