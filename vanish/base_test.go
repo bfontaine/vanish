@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/bfontaine/vanish/Godeps/_workspace/src/github.com/stretchr/testify/assert"
 )
 
 func fileExists(path string) bool {
