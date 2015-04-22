@@ -17,8 +17,11 @@ func TestFile(t *testing.T) {
 	var filename string
 
 	File(func(name string) {
+		fi, err := os.Stat(name)
+		assert.Nil(t, err)
+		assert.True(t, fi.Mode().IsRegular())
+
 		filename = name
-		assert.True(t, fileExists(filename))
 	})
 
 	assert.False(t, fileExists(filename))
@@ -28,8 +31,11 @@ func TestDir(t *testing.T) {
 	var dirname string
 
 	Dir(func(name string) {
+		fi, err := os.Stat(name)
+		assert.Nil(t, err)
+		assert.True(t, fi.Mode().IsDir())
+
 		dirname = name
-		assert.True(t, fileExists(dirname))
 	})
 
 	assert.False(t, fileExists(dirname))
