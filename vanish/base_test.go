@@ -2,6 +2,7 @@ package vanish
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -38,7 +39,7 @@ func TestFileIn(t *testing.T) {
 	})
 }
 
-func TestDir(t *testing.T) {
+func TestEmptyDir(t *testing.T) {
 	var dirname string
 
 	Dir(func(name string) {
@@ -48,6 +49,18 @@ func TestDir(t *testing.T) {
 
 		dirname = name
 	})
+
+	assert.False(t, fileExists(dirname))
+}
+
+func TestDir(t *testing.T) {
+	var dirname string
+
+	assert.Nil(t, Dir(func(name string) {
+		ioutil.TempFile(name, "")
+
+		dirname = name
+	}))
 
 	assert.False(t, fileExists(dirname))
 }
