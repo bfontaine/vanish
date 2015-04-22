@@ -1,6 +1,7 @@
 package vanish
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -89,8 +90,20 @@ func ExampleDir() {
 }
 
 func ExampleEnv() {
+	os.Setenv("VANISH", "xyz")
+
 	Env(func() {
 		// Env saves the environment before calling this function, ensuring
 		// it’s restored as it was at its end.
+
+		os.Setenv("VANISH", "foo")
+
+		fmt.Printf("VANISH (1) = %s\n", os.Getenv("VANISH"))
 	})
+
+	fmt.Printf("VANISH (2) = %s\n", os.Getenv("VANISH"))
+
+	// Output:
+	// VANISH (1) = foo
+	// VANISH (2) = xyz
 }
