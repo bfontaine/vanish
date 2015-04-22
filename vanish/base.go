@@ -62,9 +62,10 @@ func Env(fn func()) error {
 	return nil
 }
 
-func callThenRemove(name string, fn func(string)) error {
-	// Do we need RemoveAll for directories here?
-	defer os.Remove(name)
+func callThenRemove(name string, fn func(string)) (err error) {
+	defer func() {
+		err = os.RemoveAll(name)
+	}()
 
 	fn(name)
 
