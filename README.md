@@ -2,7 +2,7 @@
 
 **Vanish** is a minimal Go library to use temporary files and directories.
 
-[![GoDoc](https://godoc.org/github.com/bfontaine/vanish?status.svg)](https://godoc.org/github.com/bfontaine/vanish)
+[![GoDoc](https://godoc.org/github.com/bfontaine/vanish?status.svg)](https://godoc.org/github.com/bfontaine/vanish/vanish)
 [![Build Status](https://travis-ci.org/bfontaine/vanish.svg?branch=master)](https://travis-ci.org/bfontaine/vanish)
 
 ## Install
