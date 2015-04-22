@@ -2,6 +2,7 @@ package vanish
 
 import (
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/bfontaine/vanish/Godeps/_workspace/src/github.com/stretchr/testify/assert"
@@ -27,6 +28,15 @@ func TestFile(t *testing.T) {
 	assert.False(t, fileExists(filename))
 }
 
+func TestFileIn(t *testing.T) {
+	Dir(func(dir string) {
+		FileIn(dir, func(name string) {
+			assert.True(t, strings.HasPrefix(name, dir))
+			assert.True(t, fileExists(name))
+		})
+	})
+}
+
 func TestDir(t *testing.T) {
 	var dirname string
 
@@ -39,6 +49,15 @@ func TestDir(t *testing.T) {
 	})
 
 	assert.False(t, fileExists(dirname))
+}
+
+func TestDirIn(t *testing.T) {
+	Dir(func(parent string) {
+		DirIn(parent, func(dir string) {
+			assert.True(t, fileExists(dir))
+			assert.True(t, strings.HasPrefix(dir, parent))
+		})
+	})
 }
 
 func TestEnv(t *testing.T) {
