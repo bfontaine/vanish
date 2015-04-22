@@ -47,14 +47,17 @@ func DirIn(dir string, fn func(string)) error {
 func Env(fn func()) error {
 	env := os.Environ()
 
+	defer func() {
+		os.Clearenv()
+
+		for _, pair := range env {
+			kv := strings.SplitN(pair, "=", 2)
+			os.Setenv(kv[0], kv[1])
+		}
+
+	}()
+
 	fn()
-
-	os.Clearenv()
-
-	for _, pair := range env {
-		kv := strings.SplitN(pair, "=", 2)
-		os.Setenv(kv[0], kv[1])
-	}
 
 	return nil
 }
