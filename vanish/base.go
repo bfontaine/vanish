@@ -1,4 +1,5 @@
-// Vanish is a minimal Go library to use temporary files and directories.
+// Package vanish provides a minimal Go library to use temporary files and
+// directories.
 package vanish
 
 import (
