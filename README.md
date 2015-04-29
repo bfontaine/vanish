@@ -16,16 +16,16 @@ Vanish works with callbacks:
 ```go
 import "github.com/bfontaine/vanish/vanish"
 
-vanish.File(function(name string) {
+vanish.File(func(name string) {
     // 'name' is a temporary file, use it here as you want, it’ll be deleted
     // at the end of the function
 })
 
-vanish.Dir(function(name string) {
+vanish.Dir(func(name string) {
     // here, 'name' is a directory
 })
 
-vanish.Env(function() {
+vanish.Env(func() {
     // we can modify the environment here, it’ll be restored at the end of the
     // function
 })
