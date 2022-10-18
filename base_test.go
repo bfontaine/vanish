@@ -2,7 +2,6 @@ package vanish
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -10,79 +9,91 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func fileExists(path string) bool {
-	// we don’t really check for errors here
+func assertFileExists(t *testing.T, path string) {
 	_, err := os.Stat(path)
-	return err == nil
+	assert.Nilf(t, err, "error calling 'stat' on path %s: %s", path, err)
+}
+
+func assertFileDoesNotExists(t *testing.T, path string) {
+	_, err := os.Stat(path)
+	assert.NotNilf(t, err, "Path %s should not exist", path)
 }
 
 func TestFile(t *testing.T) {
 	var filename string
 
-	File(func(name string) {
+	err := File(func(name string) {
 		fi, err := os.Stat(name)
 		assert.Nil(t, err)
 		assert.True(t, fi.Mode().IsRegular())
 
 		filename = name
 	})
+	assert.Nil(t, err)
 
-	assert.False(t, fileExists(filename))
+	assertFileDoesNotExists(t, filename)
 }
 
 func TestFileIn(t *testing.T) {
-	Dir(func(dir string) {
-		FileIn(dir, func(name string) {
-			assert.True(t, strings.HasPrefix(name, dir))
-			assert.True(t, fileExists(name))
+	err := Dir(func(dir string) {
+		err := FileIn(dir, func(filename string) {
+			assert.True(t, strings.HasPrefix(filename, dir))
+			assertFileExists(t, filename)
 		})
+		assert.Nil(t, err)
 	})
+	assert.Nil(t, err)
 }
 
 func TestEmptyDir(t *testing.T) {
 	var dirname string
 
-	Dir(func(name string) {
+	err := Dir(func(name string) {
 		fi, err := os.Stat(name)
 		assert.Nil(t, err)
 		assert.True(t, fi.Mode().IsDir())
 
 		dirname = name
 	})
+	assert.Nil(t, err)
 
-	assert.False(t, fileExists(dirname))
+	assertFileDoesNotExists(t, dirname)
 }
 
-func TestDir(t *testing.T) {
+func TestDirNotEmpty(t *testing.T) {
 	var dirname string
 
 	assert.Nil(t, Dir(func(name string) {
-		ioutil.TempFile(name, "")
+		_, err := os.CreateTemp(name, "")
+		assert.Nil(t, err)
 
 		dirname = name
 	}))
 
-	assert.False(t, fileExists(dirname))
+	assertFileDoesNotExists(t, dirname)
 }
 
 func TestDirIn(t *testing.T) {
-	Dir(func(parent string) {
-		DirIn(parent, func(dir string) {
-			assert.True(t, fileExists(dir))
+	err := Dir(func(parent string) {
+		err := DirIn(parent, func(dir string) {
+			assertFileExists(t, dir)
 			assert.True(t, strings.HasPrefix(dir, parent))
 		})
+		assert.Nil(t, err)
 	})
+	assert.Nil(t, err)
 }
 
 func TestEnv(t *testing.T) {
 	key := "VANISH_TEST_ENV_42XYZ"
 	val := "foob&ar+/xqye$@"
-	os.Setenv(key, val)
+	assert.Nil(t, os.Setenv(key, val))
 
-	Env(func() {
+	err := Env(func() {
 		assert.Equal(t, val, os.Getenv(key))
-		os.Setenv(key, "yolofoo")
+		assert.Nil(t, os.Setenv(key, "yolofoo"))
 	})
+	assert.Nil(t, err)
 
 	assert.Equal(t, val, os.Getenv(key))
 }

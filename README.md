@@ -11,9 +11,11 @@
 
 ## Usage
 
-Vanish works with callbacks:
+Vanish works with functions:
 
 ```go
+package main
+
 import "github.com/bfontaine/vanish"
 
 vanish.File(func(name string) {

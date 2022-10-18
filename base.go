@@ -3,7 +3,6 @@
 package vanish
 
 import (
-	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -17,12 +16,14 @@ func File(fn func(string)) error {
 // FileIn is like File excepts that it accepts a parent directory as its first
 // argument. If it's empty, the call is equivalent to File.
 func FileIn(dir string, fn func(string)) error {
-	f, err := ioutil.TempFile(dir, "")
+	f, err := os.CreateTemp(dir, "")
 	if err != nil {
 		return err
 	}
 
-	f.Close()
+	if err = f.Close(); err != nil {
+		return err
+	}
 
 	return callThenRemove(f.Name(), fn)
 }
@@ -36,7 +37,7 @@ func Dir(fn func(string)) error {
 // DirIn is like Dir except that it accepts a parent directory as its first
 // argument. If it’s empty, the call is equivalent to Dir.
 func DirIn(dir string, fn func(string)) error {
-	name, err := ioutil.TempDir(dir, "")
+	name, err := os.MkdirTemp(dir, "")
 	if err != nil {
 		return err
 	}
@@ -54,7 +55,7 @@ func Env(fn func()) error {
 
 		for _, pair := range env {
 			kv := strings.SplitN(pair, "=", 2)
-			os.Setenv(kv[0], kv[1])
+			_ = os.Setenv(kv[0], kv[1])
 		}
 
 	}()
