@@ -7,7 +7,7 @@
 
 ## Install
 
-    go get github.com/bfontaine/vanish
+    go get github.com/bfontaine/vanish/v2
 
 ## Usage
 
@@ -16,7 +16,7 @@ Vanish works with functions:
 ```go
 package main
 
-import "github.com/bfontaine/vanish"
+import "github.com/bfontaine/vanish/v2"
 
 vanish.File(func(name string) {
     // 'name' is a temporary file, use it here as you want, it’ll be deleted

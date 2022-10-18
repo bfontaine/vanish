@@ -1,4 +1,4 @@
-module github.com/bfontaine/vanish
+module github.com/bfontaine/vanish/v2
 
 go 1.19
 
