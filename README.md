@@ -7,14 +7,14 @@
 
 ## Install
 
-    go get github.com/bfontaine/vanish/vanish
+    go get github.com/bfontaine/vanish
 
 ## Usage
 
 Vanish works with callbacks:
 
 ```go
-import "github.com/bfontaine/vanish/vanish"
+import "github.com/bfontaine/vanish"
 
 vanish.File(func(name string) {
     // 'name' is a temporary file, use it here as you want, it’ll be deleted
